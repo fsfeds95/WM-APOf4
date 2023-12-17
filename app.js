@@ -1,74 +1,93 @@
-// Importar las bibliotecas necesarias
+// Import the required libraries
 const express = require('express');
+const Jimp = require('jimp');
+
+// Create an Express app
 const app = express();
-const jimp = require('jimp');
-const sharp = require('sharp');
+const port = 8225;
 
-// Escuchar en el puerto 8225
-app.listen(8225, () => {
-  console.log('La aplicación está escuchando en el puerto 8225.');
-});
+// Middleware to parse JSON bodies
+app.use(express.json());
 
-// Ruta "/backdrop" para escalar y añadir marca de agua a la imagen
+// Define the "/backdrop" route
 app.get('/backdrop', async (req, res) => {
-  // Verificar si se proporcionó un enlace
-  if (!req.query.link) {
-    return res.send('¡Advertencia! No se proporcionó un enlace.');
-  }
-
   try {
-    // Escalar la imagen a 1280x720
-    const image = await sharp(req.query.link).resize(1280, 720).toBuffer();
+    // Check if the link image is provided
+    if (!req.query.link) {
+      return res.status(400).send('Please provide a link to the image.');
+    }
 
-    // Añadir marca de agua
-    const watermark = await jimp.read('wm-backdrop.png');
-    const watermarkedImage = await jimp.read(image);
-    watermarkedImage.composite(watermark.opacity(0.6), 0, 0, {
-      mode: jimp.BLEND_SCREEN,
+    // Load the link image
+    const image = await Jimp.read(req.query.link);
+
+    // Scale the image to 1280px width by 720px height
+    image.scaleToFit(1280, 720);
+
+    // Load the watermark image
+    const watermark = await Jimp.read('wm-backdrop.png');
+
+    // Set watermark opacity to 0.6
+    watermark.opacity(0.6);
+
+    // Place the watermark on the image
+    image.composite(watermark, 0, 0, {
+      mode: Jimp.BLEND_SCREEN,
+      opacitySource: 0.6,
       opacityDest: 1,
-      opacitySource: 0.6
     });
 
-    // Guardar la imagen con marca de agua como un archivo JPEG con calidad del 90%
-    const outputImage = await watermarkedImage.quality(90).getBufferAsync(jimp.MIME_JPEG);
+    // Convert the image to JPEG
+    const buffer = await image.quality(90).getBufferAsync(Jimp.MIME_JPEG);
 
-    // Mostrar la imagen en el navegador
+    // Send the image as the response
     res.set('Content-Type', 'image/jpeg');
-    res.send(outputImage);
+    res.send(buffer);
   } catch (error) {
     console.error(error);
-    res.send('Ocurrió un error al procesar la imagen.');
+    res.status(500).send('An error occurred while processing the image.');
   }
 });
 
-// Ruta "/poster" para escalar y añadir marca de agua a la imagen
+// Define the "/poster" route
 app.get('/poster', async (req, res) => {
-  // Verificar si se proporcionó un enlace
-  if (!req.query.link) {
-    return res.send('¡Advertencia! No se proporcionó un enlace.');
-  }
-
   try {
-    // Escalar la imagen a 720x1280
-    const image = await sharp(req.query.link).resize(720, 1280).toBuffer();
+    // Check if the link image is provided
+    if (!req.query.link) {
+      return res.status(400).send('Please provide a link to the image.');
+    }
 
-    // Añadir marca de agua
-    const watermark = await jimp.read('wm-poster.png');
-    const watermarkedImage = await jimp.read(image);
-    watermarkedImage.composite(watermark.opacity(0.6), 0, 0, {
-      mode: jimp.BLEND_SCREEN,
+    // Load the link image
+    const image = await Jimp.read(req.query.link);
+
+    // Scale the image to 720px width by 1280px height
+    image.scaleToFit(720, 1280);
+
+    // Load the watermark image
+    const watermark = await Jimp.read('wm-poster.png');
+
+    // Set watermark opacity to 0.6
+    watermark.opacity(0.6);
+
+    // Place the watermark on the image
+    image.composite(watermark, 0, 0, {
+      mode: Jimp.BLEND_SCREEN,
+      opacitySource: 0.6,
       opacityDest: 1,
-      opacitySource: 0.6
     });
 
-    // Guardar la imagen con marca de agua como un archivo JPEG con calidad del 90%
-    const outputImage = await watermarkedImage.quality(90).getBufferAsync(jimp.MIME_JPEG);
+    // Convert the image to JPEG
+    const buffer = await image.quality(90).getBufferAsync(Jimp.MIME_JPEG);
 
-    // Mostrar la imagen en el navegador
+    // Send the image as the response
     res.set('Content-Type', 'image/jpeg');
-    res.send(outputImage);
+    res.send(buffer);
   } catch (error) {
     console.error(error);
-    res.send('Ocurrió un error al procesar la imagen.');
+    res.status(500).send('An error occurred while processing the image.');
   }
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
