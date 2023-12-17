@@ -10,15 +10,15 @@ const port = 8225;
 app.use(express.json());
 
 // Define the "/backdrop" route
-app.get('/backdrop', async (req, res) => {
+app.get('/b', async (req, res) => {
   try {
     // Check if the link image is provided
-    if (!req.query.link) {
+    if (!req.query.url) {
       return res.status(400).send('Please provide a link to the image.');
     }
 
     // Load the link image
-    const image = await Jimp.read(req.query.link);
+    const image = await Jimp.read(req.query.url);
 
     // Scale the image to 1280px width by 720px height
     image.scaleToFit(1280, 720);
@@ -27,17 +27,17 @@ app.get('/backdrop', async (req, res) => {
     const watermark = await Jimp.read('wm-backdrop.png');
 
     // Set watermark opacity to 0.6
-    watermark.opacity(0.6);
+    watermark.opacity(0.9);
 
     // Place the watermark on the image
     image.composite(watermark, 0, 0, {
       mode: Jimp.BLEND_SCREEN,
-      opacitySource: 0.6,
+      opacitySource: 0.9,
       opacityDest: 1,
     });
 
     // Convert the image to JPEG
-    const buffer = await image.quality(90).getBufferAsync(Jimp.MIME_JPEG);
+    const buffer = await image.quality(95).getBufferAsync(Jimp.MIME_JPEG);
 
     // Send the image as the response
     res.set('Content-Type', 'image/jpeg');
@@ -49,15 +49,15 @@ app.get('/backdrop', async (req, res) => {
 });
 
 // Define the "/poster" route
-app.get('/poster', async (req, res) => {
+app.get('/p', async (req, res) => {
   try {
     // Check if the link image is provided
-    if (!req.query.link) {
+    if (!req.query.url) {
       return res.status(400).send('Please provide a link to the image.');
     }
 
     // Load the link image
-    const image = await Jimp.read(req.query.link);
+    const image = await Jimp.read(req.query.url);
 
     // Scale the image to 720px width by 1280px height
     image.scaleToFit(720, 1280);
@@ -66,17 +66,17 @@ app.get('/poster', async (req, res) => {
     const watermark = await Jimp.read('wm-poster.png');
 
     // Set watermark opacity to 0.6
-    watermark.opacity(0.6);
+    watermark.opacity(0.9);
 
     // Place the watermark on the image
     image.composite(watermark, 0, 0, {
       mode: Jimp.BLEND_SCREEN,
-      opacitySource: 0.6,
+      opacitySource: 0.9,
       opacityDest: 1,
     });
 
     // Convert the image to JPEG
-    const buffer = await image.quality(90).getBufferAsync(Jimp.MIME_JPEG);
+    const buffer = await image.quality(95).getBufferAsync(Jimp.MIME_JPEG);
 
     // Send the image as the response
     res.set('Content-Type', 'image/jpeg');
