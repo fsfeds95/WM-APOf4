@@ -24,6 +24,7 @@ app.get('/p', async (req, res) => {
     // Cargar la marca de agua
     const watermark = await Jimp.read('wm-poster_v2.png');
     watermark.resize(720, 1080);
+    watermark.opacity(0.25);
 
     // Aplicar la marca de agua a la imagen
     image.composite(watermark, 0, 0, {
