@@ -9,7 +9,7 @@ const port = 8225;
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Define the "/backdrop" route
+// Define the "/b" route
 app.get('/b', async (req, res) => {
   try {
     // Check if the link image is provided
@@ -24,15 +24,15 @@ app.get('/b', async (req, res) => {
     image.scaleToFit(1280, 720);
 
     // Load the watermark image
-    const watermark = await Jimp.read('wm-backdrop.png');
+    const watermark = await Jimp.read('wm-backdrop_v3.png');
 
-    // Set watermark opacity to 0.6
-    watermark.opacity(0.9);
+    // Set watermark opacity to 1
+    watermark.opacity(1);
 
     // Place the watermark on the image
     image.composite(watermark, 0, 0, {
       mode: Jimp.BLEND_SCREEN,
-      opacitySource: 0.9,
+      opacitySource: 1,
       opacityDest: 1,
     });
 
@@ -48,7 +48,7 @@ app.get('/b', async (req, res) => {
   }
 });
 
-// Define the "/poster" route
+// Define the "/p" route
 app.get('/p', async (req, res) => {
   try {
     // Check if the link image is provided
@@ -59,14 +59,14 @@ app.get('/p', async (req, res) => {
     // Load the link image
     const image = await Jimp.read(req.query.url);
 
-    // Scale the image to 720px width by 1280px height
-    image.scaleToFit(720, 1280);
+    // Scale the image to 720px width by 1080px height
+    image.scaleToFit(720, 1080);
 
     // Load the watermark image
-    const watermark = await Jimp.read('wm-poster.png');
+    const watermark = await Jimp.read('wm-poster_v2.png');
 
     // Set watermark opacity to 0.6
-    watermark.opacity(0.9);
+    watermark.opacity(0.25);
 
     // Place the watermark on the image
     image.composite(watermark, 0, 0, {
