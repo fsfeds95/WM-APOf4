@@ -26,6 +26,9 @@ app.get('/b', async (req, res) => {
     // Load the watermark image
     const watermark = await Jimp.read('wm-backdrop_v3.png');
 
+    // Scale the watermark to 1280px width by 720px height
+    watermark.scaleToFit(1280, 720);
+
     // Set watermark opacity to 1
     watermark.opacity(1);
 
@@ -65,13 +68,16 @@ app.get('/p', async (req, res) => {
     // Load the watermark image
     const watermark = await Jimp.read('wm-poster_v2.png');
 
-    // Set watermark opacity to 0.6
+    // Scale the watermark to 720px width by 1080px height
+    watermark.scaleToFit(720, 1080);
+
+    // Set watermark opacity to 0.25
     watermark.opacity(0.25);
 
     // Place the watermark on the image
     image.composite(watermark, 0, 0, {
       mode: Jimp.BLEND_SCREEN,
-      opacitySource: 0.9,
+      opacitySource: 1,
       opacityDest: 1,
     });
 
