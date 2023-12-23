@@ -24,7 +24,7 @@ app.get('/b', async (req, res) => {
     image.scaleToFit(1280, 720);
 
     // Load the watermark image
-    const watermark = await Jimp.read('wm-backdrop_v3.png');
+    const watermark = await Jimp.read('wm-backdrop_v4.png');
 
     // Scale the watermark to 1280px width by 720px height
     watermark.scaleToFit(1280, 720);
