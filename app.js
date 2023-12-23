@@ -1,114 +1,79 @@
-// Import the required libraries
 const express = require('express');
-const Jimp = require('jimp');
+const jimp = require('jimp');
+const path = require('path');
 
-// Create an Express app
 const app = express();
-const port = 8225;
+const PORT = 8225;
 
-// Middleware to parse JSON bodies
+// Middleware para permitir el análisis de JSON en las peticiones
 app.use(express.json());
 
-// Define the "/b" route
-app.get('/b', async (req, res) => {
-  try {
-    // Check if the link image is provided
-    if (!req.query.url) {
-      return res.status(400).send('Please provide a link to the image.');
-    }
-
-    // Load the link image
-    const image = await Jimp.read(req.query.url);
-
-    // Scale the image to 1280px width by 720px height
-    image.scaleToFit(1280, 720);
-
-    // Load the watermark Logo image
-    const wTxt = await Jimp.read('Wtxt-Backdrop.png');
-
-    // Scale the watermark to 1280px width by 720px height
-    wTxt.scaleToFit(1280, 720);
-
-    // Set watermark opacity to 1
-    wTxt.opacity(0.25);
-
-    // Place the watermark 1 on the image
-    image.composite(wTxt, 0, 0, {
-      mode: Jimp.BLEND_SCREEN,
-      opacitySource: 1,
-      opacityDest: 1,
-    });
-    
-    // Load the watermark image
-    const wlogo = await Jimp.read('Wlogo-Backdrop.png');
-
-    // Scale the watermark to 1280px width by 720px height
-    wLogo.scaleToFit(1280, 720);
-
-    // Set watermark opacity to 1
-    wLogo.opacity(1);
-    
-    image.composite(wLogo, 0, 0, {
-      mode: Jimp.BLEND_SCREEN,
-      opacitySource: 1,
-      opacityDest: 1,
-    });
-    
-    // Convert the image to JPEG
-    const buffer = await image.quality(95).getBufferAsync(Jimp.MIME_JPEG);
-
-    // Send the image as the response
-    res.set('Content-Type', 'image/jpeg');
-    res.send(buffer);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('An error occurred while processing the image.');
-  }
-});
-
-// Define the "/p" route
+// Ruta "/p" para procesar la imagen con marca de agua y escalarla a 720x1080
 app.get('/p', async (req, res) => {
+  const { url } = req.query;
+
+  if (!url) {
+    return res.status(400).send('¡Error! No se proporcionó un enlace válido.');
+  }
+
   try {
-    // Check if the link image is provided
-    if (!req.query.url) {
-      return res.status(400).send('Please provide a link to the image.');
-    }
+    const image = await jimp.read(url);
+    const watermark = await jimp.read('wm-poster_v2.png');
 
-    // Load the link image
-    const image = await Jimp.read(req.query.url);
+    // Escalado de la imagen a 720x1080
+    image.resize(720, 1080);
 
-    // Scale the image to 720px width by 1080px height
-    image.scaleToFit(720, 1080);
+    // Agregar marca de agua con opacidad de 0.25
+    image.composite(watermark, 0, 0, { mode: jimp.BLEND_SCREEN, opacitySource: 0.25 });
 
-    // Load the watermark image
-    const watermark = await Jimp.read('wm-poster_v2.png');
+    // Guardar la imagen de salida
+    const outputPath = path.join(__dirname, 'poster_WM_AstroPeliculasOf.jpg');
+    await image.quality(95).writeAsync(outputPath);
 
-    // Scale the watermark to 720px width by 1080px height
-    watermark.scaleToFit(720, 1080);
-
-    // Set watermark opacity to 0.25
-    watermark.opacity(0.12);
-
-    // Place the watermark on the image
-    image.composite(watermark, 0, 0, {
-      mode: Jimp.BLEND_SCREEN,
-      opacitySource: 1,
-      opacityDest: 1,
-    });
-
-    // Convert the image to JPEG
-    const buffer = await image.quality(95).getBufferAsync(Jimp.MIME_JPEG);
-
-    // Send the image as the response
-    res.set('Content-Type', 'image/jpeg');
-    res.send(buffer);
+    // Descargar la imagen en el navegador
+    res.download(outputPath, 'WM-AstroPeliculasOf.jpg');
   } catch (error) {
     console.error(error);
-    res.status(500).send('An error occurred while processing the image.');
+    res.status(500).send('¡Error! No se pudo procesar la imagen.');
   }
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+// Ruta "/b" para procesar la imagen con marca de agua y escalarla a 1280x720
+app.get('/b', async (req, res) => {
+  const { url } = req.query;
+
+  if (!url) {
+    return res.status(400).send('¡Error! No se proporcionó un enlace válido.');
+  }
+
+  try {
+    const image = await jimp.read(url);
+    const watermark1 = await jimp.read('Wtxt-Backdrop.png');
+    const watermark2 = await jimp.read('Wlogo-Backdrop.png');
+
+    // Escalado de la imagen a 1280x720
+    image.resize(1280, 720);
+    
+    watermark1.resize(1280, 720);
+    watermark2.resize(1280, 720);
+
+    // Agregar marcas de agua con opacidad de 1
+    image.composite(watermark1, 0, 0, { mode: jimp.BLEND_SCREEN, opacitySource: 1 });
+    image.composite(watermark2, 0, 0, { mode: jimp.BLEND_SCREEN, opacitySource: 1 });
+
+    // Guardar la imagen de salida
+    const outputPath = path.join(__dirname, 'backdrop_WM_AstroPeliculasOf.jpg');
+    await image.quality(95).writeAsync(outputPath);
+
+    // Descargar la imagen en el navegador
+    res.download(outputPath, 'WM-AstroPeliculasOf.jpg');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('¡Error! No se pudo procesar la imagen.');
+  }
+});
+
+// Iniciar el servidor en el puerto especificado
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
