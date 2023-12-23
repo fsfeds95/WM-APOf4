@@ -72,7 +72,7 @@ app.get('/p', async (req, res) => {
     watermark.scaleToFit(720, 1080);
 
     // Set watermark opacity to 0.25
-    watermark.opacity(0.25);
+    watermark.opacity(0.12);
 
     // Place the watermark on the image
     image.composite(watermark, 0, 0, {
