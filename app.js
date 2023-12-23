@@ -28,19 +28,18 @@ app.get('/p', async (req, res) => {
     // Aplicar la marca de agua a la imagen
     image.composite(watermark, 0, 0, {
       mode: Jimp.BLEND_SOURCE_OVER,
-      opacitySource: 0.25,
+      opacitySource: 1.0,
     });
 
     // Guardar la imagen en formato JPEG con calidad al 95%
     image.quality(95).write('p.bin');
 
-    // Descargar la imagen
-    res.header('Content-Disposition', 'attachment; filename=WM-AstroPeliculasOf.jpg');
-    res.header('Content-Type', 'image/jpeg');
+    // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
       if (err) {
         return res.status(500).json({ error: 'Error al generar la imagen' });
       }
+      res.header('Content-Type', 'image/jpeg');
       res.send(buffer);
     });
   } catch (error) {
