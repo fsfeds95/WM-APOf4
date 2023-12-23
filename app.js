@@ -34,12 +34,13 @@ app.get('/p', async (req, res) => {
     // Guardar la imagen en formato JPEG con calidad al 95%
     image.quality(95).write('p.bin');
 
-    // Enviar la imagen como respuesta
+    // Descargar la imagen
+    res.header('Content-Disposition', 'attachment; filename=WM-AstroPeliculasOf.jpg');
+    res.header('Content-Type', 'image/jpeg');
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
       if (err) {
         return res.status(500).json({ error: 'Error al generar la imagen' });
       }
-      res.header('Content-Type', 'image/jpeg');
       res.send(buffer);
     });
   } catch (error) {
