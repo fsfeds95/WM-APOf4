@@ -23,24 +23,39 @@ app.get('/b', async (req, res) => {
     // Scale the image to 1280px width by 720px height
     image.scaleToFit(1280, 720);
 
-    // Load the watermark image
-    const watermark = await Jimp.read('wm-backdrop_v4.png');
+    // Load the watermark Logo image
+    const wTxt = await Jimp.read('Wtxt-Backdrop.png');
 
     // Scale the watermark to 1280px width by 720px height
-    watermark.scaleToFit(1280, 720);
+    wTxt.scaleToFit(1280, 720);
 
     // Set watermark opacity to 1
-    watermark.opacity(1);
+    wTxt.opacity(0.25);
 
-    // Place the watermark on the image
-    image.composite(watermark, 0, 0, {
+    // Place the watermark 1 on the image
+    const wImg = image.composite(wTxt, 0, 0, {
       mode: Jimp.BLEND_SCREEN,
       opacitySource: 1,
       opacityDest: 1,
     });
+    
+    // Load the watermark image
+    const wlogo = await Jimp.read('Wlogo-Backdrop.png');
 
+    // Scale the watermark to 1280px width by 720px height
+    wLogo.scaleToFit(1280, 720);
+
+    // Set watermark opacity to 1
+    wLogo.opacity(1);
+    
+    const imgFinal = wImg.composite(wLogo, 0, 0, {
+      mode: Jimp.BLEND_SCREEN,
+      opacitySource: 1,
+      opacityDest: 1,
+    });
+    
     // Convert the image to JPEG
-    const buffer = await image.quality(95).getBufferAsync(Jimp.MIME_JPEG);
+    const buffer = await imgFinal.quality(95).getBufferAsync(Jimp.MIME_JPEG);
 
     // Send the image as the response
     res.set('Content-Type', 'image/jpeg');
