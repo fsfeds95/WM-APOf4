@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "jimp": "^0.16.1",
-    "sharp": "^0.28.3"
+    "jimp": "^0.16.1"
   }
 }
