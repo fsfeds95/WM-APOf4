@@ -33,7 +33,7 @@ app.get('/b', async (req, res) => {
     wTxt.opacity(0.25);
 
     // Place the watermark 1 on the image
-    const wImg = image.composite(wTxt, 0, 0, {
+    image.composite(wTxt, 0, 0, {
       mode: Jimp.BLEND_SCREEN,
       opacitySource: 1,
       opacityDest: 1,
@@ -48,14 +48,14 @@ app.get('/b', async (req, res) => {
     // Set watermark opacity to 1
     wLogo.opacity(1);
     
-    const imgFinal = wImg.composite(wLogo, 0, 0, {
+    image.composite(wLogo, 0, 0, {
       mode: Jimp.BLEND_SCREEN,
       opacitySource: 1,
       opacityDest: 1,
     });
     
     // Convert the image to JPEG
-    const buffer = await imgFinal.quality(95).getBufferAsync(Jimp.MIME_JPEG);
+    const buffer = await image.quality(95).getBufferAsync(Jimp.MIME_JPEG);
 
     // Send the image as the response
     res.set('Content-Type', 'image/jpeg');
