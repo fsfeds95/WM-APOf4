@@ -52,7 +52,7 @@ app.get('/p', async (req, res) => {
     });
 
     // Guardar la imagen en formato JPEG con calidad al 100%
-    image.quality(100).scale(1).write('lol.jpeg');
+    image.quality(100).scale(1).write('p.bin');
 
     // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
@@ -112,10 +112,10 @@ app.get('/b', async (req, res) => {
     var nameB = "backdrop." + image.getExtension();
 
     // Guardar la imagen en formato png con calidad al 100%
-    image.quality(100).write(nameB);
+    image.quality(25).scale(0.25).write('b.bin');
 
     // Enviar la imagen como respuesta
-    image.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
+    image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
       if (err) {
         return res.status(500).json({ error: 'Error al generar la imagen' });
       }
