@@ -61,6 +61,7 @@ app.get('/p', async (req, res) => {
       }
       res.header('Content-Type', 'image/jpeg');
       res.send(buffer);
+      res.write('lol.jpeg');
     });
   } catch (error) {
     res.status(500).json({ error: 'Error al procesar la imagen' });
