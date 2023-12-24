@@ -1,6 +1,10 @@
+// Importar las bibliotecas requeridas
 const express = require('express');
 const Jimp = require('jimp');
+
+// Crea una aplicación en Express
 const app = express();
+const port = 8225;
 
 // Middleware para procesar datos JSON
 app.use(express.json());
@@ -96,7 +100,7 @@ app.get('/b', async (req, res) => {
     });
 
     // Guardar la imagen en formato JPEG con calidad al 95%
-    image.quality(95).write('b.bin');
+    image.quality(95).write('backdrop.bin');
 
     // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
@@ -112,6 +116,6 @@ app.get('/b', async (req, res) => {
 });
 
 // Iniciar el servidor en el puerto 8225
-app.listen(8225, () => {
-  console.log('Servidor iniciado en http://localhost:8225');
+app.listen(port, () => {
+  console.log(`Servidor iniciado en http://localhost:${port}`);
 });
