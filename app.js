@@ -23,7 +23,11 @@ app.get('/p', async (req, res) => {
 
     // Cargar la marca de agua
     const watermark = await Jimp.read('wm-poster_v2.png');
+
+    // Escala la marca de agua a 720px de ancho por 1080px de alto
     watermark.resize(720, 1080);
+
+    // Establece la opacidad de la marca de agua en 0,25
     watermark.opacity(0.25);
 
     // Aplicar la marca de agua a la imagen
@@ -67,10 +71,14 @@ app.get('/b', async (req, res) => {
     // Cargar las marcas de agua
     const watermark1 = await Jimp.read('Wtxt-Backdrop.png');
     const watermark2 = await Jimp.read('Wlogo-Backdrop.png');
+
+    // Escala la marca de agua a 1280px de ancho por 720px de alto
     watermark1.resize(1280, 720);
     watermark2.resize(1280, 720);
-    watermark1.opacity(0.25);
-    watermark2.opacity(1);
+
+    // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
+    watermark1.opacity(0.375);
+    watermark2.opacity(0.75);
 
     // Combinar las marcas de agua en una sola imagen
     watermark1.composite(watermark2, 0, 0, {
