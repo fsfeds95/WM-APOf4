@@ -109,15 +109,17 @@ app.get('/b', async (req, res) => {
       opacityDest: 1.0
     });
 
-    // Guardar la imagen en formato JPEG con calidad al 100%
-    image.quality(100).write('backdrop.bin');
+    var nameB = "backdrop." + image.getExtension();
+
+    // Guardar la imagen en formato png con calidad al 100%
+    image.quality(100).write(nameB);
 
     // Enviar la imagen como respuesta
-    image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
+    image.getBuffer(Jimp.MIME_PNG, (err, buffer) => {
       if (err) {
         return res.status(500).json({ error: 'Error al generar la imagen' });
       }
-      res.header('Content-Type', 'image/jpeg');
+      res.header('Content-Type', 'image/png');
       res.send(buffer);
     });
   } catch (error) {
