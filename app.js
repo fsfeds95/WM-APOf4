@@ -35,7 +35,7 @@ app.get('/p', async (req, res) => {
 
     // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
     watermark1.opacity(0.25);
-    watermark2.opacity(0.90);
+    watermark2.opacity(0.50);
 
     // Combinar las marcas de agua en una sola imagen
     watermark1.composite(watermark2, 0, 0, {
