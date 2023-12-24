@@ -41,8 +41,8 @@ app.get('/p', async (req, res) => {
       opacityDest: 1.0
     });
 
-    // Guardar la imagen en formato JPEG con calidad al 95%
-    image.quality(95).write('p.bin');
+    // Guardar la imagen en formato JPEG con calidad al 100%
+    image.quality(100).write('p.bin');
 
     // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
@@ -99,8 +99,8 @@ app.get('/b', async (req, res) => {
       opacityDest: 1.0
     });
 
-    // Guardar la imagen en formato JPEG con calidad al 95%
-    image.quality(95).write('backdrop.bin');
+    // Guardar la imagen en formato JPEG con calidad al 100%
+    image.quality(100).write('backdrop.bin');
 
     // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
