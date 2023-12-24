@@ -55,7 +55,7 @@ app.get('/p', async (req, res) => {
     image.quality(100).scale(1).write('lol.jpeg');
 
     // Enviar la imagen como respuesta
-    image.getBuffer(Jimp.write('lol.jpeg'), Jimp.MIME_JPEG, (err, buffer) => {
+    image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
       if (err) {
         return res.status(500).json({ error: 'Error al generar la imagen' });
       }
