@@ -59,11 +59,11 @@ app.get('/p', async (req, res) => {
       if (err) {
         return res.status(500).json({ error: 'Error al generar la imagen' });
       }
-      res.set(
+      res.header(
         'Content-Type', 'image/jpeg',
-        'attachment; filename=' + backdrop.jpg
+        'filename', 'backdrop.jpg'
         );
-      res.send(buffer);
+      res.send(buffer.from(data, 'jpeg'));
     });
   } catch (error) {
     res.status(500).json({ error: 'Error al procesar la imagen' });
