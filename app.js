@@ -34,6 +34,7 @@ app.get('/p', async (req, res) => {
     image.composite(watermark, 0, 0, {
       mode: Jimp.BLEND_SOURCE_OVER,
       opacitySource: 1.0,
+      opacityDest: 1.0
     });
 
     // Guardar la imagen en formato JPEG con calidad al 95%
@@ -84,12 +85,14 @@ app.get('/b', async (req, res) => {
     watermark1.composite(watermark2, 0, 0, {
       mode: Jimp.BLEND_SOURCE_OVER,
       opacitySource: 1.0,
+      opacityDest: 1.0
     });
 
     // Aplicar la marca de agua a la imagen
     image.composite(watermark1, 0, 0, {
       mode: Jimp.BLEND_SOURCE_OVER,
       opacitySource: 1.0,
+      opacityDest: 1.0
     });
 
     // Guardar la imagen en formato JPEG con calidad al 95%
