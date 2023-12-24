@@ -111,7 +111,7 @@ app.get('/b', async (req, res) => {
       opacityDest: 1.0
     });
 
-    var nameB = "backdrop." + image.getExtension();
+    var nameB = "backdrop.jpeg";
 
     // Guardar la imagen en formato png con calidad al 100%
     image.quality(100).scale(2.3438).write('b.bin');
@@ -125,8 +125,7 @@ app.get('/b', async (req, res) => {
         'Content-Type', 'image/jpeg',
         'filename', 'backdrop.jpg'
       );
-      res.send(buffer.from(data, 'jpeg'));
-      res.write(nameB);
+      res.send(buffer.write(nameB));
     });
   } catch (error) {
     res.status(500).json({ error: 'Error al procesar la imagen' });
