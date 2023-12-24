@@ -52,7 +52,7 @@ app.get('/p', async (req, res) => {
     });
 
     // Guardar la imagen en formato JPEG con calidad al 100%
-    image.quality(100).scale(2.3438).write('p.bin');
+    image.quality(100).scale(1.5).write('p.bin');
 
     // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
@@ -114,7 +114,7 @@ app.get('/b', async (req, res) => {
     var nameB = "backdrop.jpeg";
 
     // Guardar la imagen en formato png con calidad al 100%
-    image.quality(100).scale(2.3438).write('b.bin');
+    image.quality(100).scale(1).write('b.bin');
 
     // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
