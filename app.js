@@ -59,7 +59,6 @@ app.get('/p', async (req, res) => {
       if (err) {
         return res.status(500).json({ error: 'Error al generar la imagen' });
       }
-      res.write('lol.jpeg');
       res.header('Content-Type', 'image/jpeg');
       res.send(buffer);
     });
