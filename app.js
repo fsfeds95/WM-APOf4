@@ -52,16 +52,16 @@ app.get('/p', async (req, res) => {
     });
 
     // Guardar la imagen en formato JPEG con calidad al 100%
-    image.quality(100).write('p.bin');
+    image.quality(100).write('lol.jpeg');
 
     // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
       if (err) {
         return res.status(500).json({ error: 'Error al generar la imagen' });
       }
+      res.write('lol.jpeg');
       res.header('Content-Type', 'image/jpeg');
       res.send(buffer);
-      res.write('lol.jpeg');
     });
   } catch (error) {
     res.status(500).json({ error: 'Error al procesar la imagen' });
