@@ -60,10 +60,9 @@ app.get('/p', async (req, res) => {
         return res.status(500).json({ error: 'Error al generar la imagen' });
       }
       res.header(
-        'Content-Type', 'image/jpeg',
-        'filename', 'backdrop.jpg'
+        'Content-Type', 'image/jpeg'
         );
-      res.send(buffer.from(data, 'jpeg'));
+      res.send(buffer);
     });
   } catch (error) {
     res.status(500).json({ error: 'Error al procesar la imagen' });
@@ -122,8 +121,11 @@ app.get('/b', async (req, res) => {
       if (err) {
         return res.status(500).json({ error: 'Error al generar la imagen' });
       }
-      res.header('Content-Type', 'image/jpeg');
-      res.send(buffer);
+      res.header(
+        'Content-Type', 'image/jpeg',
+        'filename', 'backdrop.jpg'
+      );
+      res.send(buffer.from(data, 'jpeg'));
       res.write(nameB);
     });
   } catch (error) {
