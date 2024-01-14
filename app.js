@@ -23,15 +23,15 @@ app.get('/p', async (req, res) => {
     const image = await Jimp.read(url);
 
     // Redimensionar la imagen a 720x1080
-    image.resize(720, 1280);
+    image.resize(720, 1080);
 
     // Cargar las marcas de agua
     const watermark1 = await Jimp.read('Wtxt-poster.png');
     const watermark2 = await Jimp.read('Wlogo-poster.png');
 
     // Escala la marca de agua a 1280px de ancho por 720px de alto
-    watermark1.resize(720, 1280);
-    watermark2.resize(720, 1280);
+    watermark1.resize(720, 1080);
+    watermark2.resize(720, 1080);
 
     // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
     watermark1.opacity(0.25);
