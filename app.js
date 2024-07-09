@@ -154,7 +154,7 @@ app.get('/b', async (req, res) => {
     watermark2.resize(1280, 720);
 
     // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
-    watermark1.opacity(0.12);
+    watermark1.opacity(0.06);
     watermark2.opacity(0.25);
 
     // Combinar las marcas de agua en una sola imagen
