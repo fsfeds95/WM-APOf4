@@ -11,49 +11,57 @@ app.use(express.json());
 
 // Ruta "/ws"
 app.get('/ws', async (req, res) => {
-  const url = req.query.url;
+  const imageURL = req.query.url;
 
-  // Verificar si se suministró un enlace
-  if (!url) {
-    return res.status(400).json({ error: 'No se proporcionó un enlace' });
+  if (!imageURL) {
+    res.status(400).send('Ups, parece que te olvidaste de proporcionar una URL de imagen');
+    return;
+  }
+
+  // Verificar si la imagen está en la caché
+
+  if (imageEnCache) {
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.sendFile(rutaDeLaImagenEnCache);
+    return;
   }
 
   try {
     // Cargar la imagen desde el enlace
     const image = await Jimp.read(url);
-
+    
     // Redimensionar la imagen a 720x1080
-    image.resize(650, 800);
-
+    image.resize(360, 720);
+    
     // Cargar las marcas de agua
     const watermark1 = await Jimp.read('Wtxt-poster.png');
     const watermark2 = await Jimp.read('Wlogo-poster.png');
-
+    
     // Escala la marca de agua a 1280px de ancho por 720px de alto
-    watermark1.resize(650, 800);
-    watermark2.resize(650, 800);
-
+    watermark1.resize(360, 720);
+    watermark2.resize(360, 720);
+    
     // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
     watermark1.opacity(0.20);
     watermark2.opacity(0.35);
-
+    
     // Combinar las marcas de agua en una sola imagen
     watermark1.composite(watermark2, 0, 0, {
       mode: Jimp.BLEND_SOURCE_OVER,
       opacitySource: 1.0,
       opacityDest: 1.0
     });
-
+    
     // Aplicar la marca de agua a la imagen
     image.composite(watermark1, 0, 0, {
       mode: Jimp.BLEND_SOURCE_OVER,
       opacitySource: 1.0,
       opacityDest: 1.0
     });
-
+    
     // Guardar la imagen en formato JPEG con calidad al 100%
     image.quality(100).scale(1.5).write('p.bin');
-
+    
     // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
       if (err) {
@@ -61,59 +69,68 @@ app.get('/ws', async (req, res) => {
       }
       res.header(
         'Content-Type', 'image/jpeg'
-        );
+      );
       res.send(buffer);
     });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al procesar la imagen' });
+    }
+    catch (error) {
+      res.status(500).json({ error: 'Error al procesar la imagen' });
   }
 });
 
 // Ruta "/p"
 app.get('/p', async (req, res) => {
-  const url = req.query.url;
+  const imageURL = req.query.url;
 
-  // Verificar si se suministró un enlace
-  if (!url) {
-    return res.status(400).json({ error: 'No se proporcionó un enlace' });
+  if (!imageURL) {
+    res.status(400).send('Ups, parece que te olvidaste de proporcionar una URL de imagen');
+    return;
+  }
+
+  // Verificar si la imagen está en la caché
+
+  if (imageEnCache) {
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.sendFile(rutaDeLaImagenEnCache);
+    return;
   }
 
   try {
     // Cargar la imagen desde el enlace
     const image = await Jimp.read(url);
-
+    
     // Redimensionar la imagen a 720x1080
     image.resize(720, 1080);
-
+    
     // Cargar las marcas de agua
     const watermark1 = await Jimp.read('Wtxt-poster.png');
     const watermark2 = await Jimp.read('Wlogo-poster.png');
-
+    
     // Escala la marca de agua a 1280px de ancho por 720px de alto
     watermark1.resize(720, 1080);
     watermark2.resize(720, 1080);
-
+    
     // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
     watermark1.opacity(0.20);
     watermark2.opacity(0.35);
-
+    
     // Combinar las marcas de agua en una sola imagen
     watermark1.composite(watermark2, 0, 0, {
       mode: Jimp.BLEND_SOURCE_OVER,
       opacitySource: 1.0,
       opacityDest: 1.0
     });
-
+    
     // Aplicar la marca de agua a la imagen
     image.composite(watermark1, 0, 0, {
       mode: Jimp.BLEND_SOURCE_OVER,
       opacitySource: 1.0,
       opacityDest: 1.0
     });
-
+    
     // Guardar la imagen en formato JPEG con calidad al 100%
     image.quality(100).scale(1.5).write('p.bin');
-
+    
     // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
       if (err) {
@@ -121,21 +138,30 @@ app.get('/p', async (req, res) => {
       }
       res.header(
         'Content-Type', 'image/jpeg'
-        );
+      );
       res.send(buffer);
     });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al procesar la imagen' });
+    }
+    catch (error) {
+      res.status(500).json({ error: 'Error al procesar la imagen' });
   }
 });
 
 // Ruta "/b"
 app.get('/b', async (req, res) => {
-  const url = req.query.url;
+  const imageURL = req.query.url;
 
-  // Verificar si se suministró un enlace
-  if (!url) {
-    return res.status(400).json({ error: 'No se proporcionó un enlace' });
+  if (!imageURL) {
+    res.status(400).send('Ups, parece que te olvidaste de proporcionar una URL de imagen');
+    return;
+  }
+
+  // Verificar si la imagen está en la caché
+
+  if (imageEnCache) {
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.sendFile(rutaDeLaImagenEnCache);
+    return;
   }
 
   try {
@@ -154,28 +180,26 @@ app.get('/b', async (req, res) => {
     watermark2.resize(1280, 720);
 
     // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
-    watermark1.opacity(0.12);
-    watermark2.opacity(0.37);
-
+    watermark1.opacity(0.25);
+    watermark2.opacity(1);
+    
     // Combinar las marcas de agua en una sola imagen
     watermark1.composite(watermark2, 0, 0, {
       mode: Jimp.BLEND_SOURCE_OVER,
       opacitySource: 1.0,
       opacityDest: 1.0
     });
-
+    
     // Aplicar la marca de agua a la imagen
     image.composite(watermark1, 0, 0, {
       mode: Jimp.BLEND_SOURCE_OVER,
       opacitySource: 1.0,
       opacityDest: 1.0
     });
-
-    var nameB = "backdrop.jpeg";
-
-    // Guardar la imagen en formato png con calidad al 100%
-    image.quality(100).scale(1).write('b.bin');
-
+    
+    // Guardar la imagen en formato JPEG con calidad al 100%
+    image.quality(100).scale(1.5).write('p.bin');
+    
     // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
       if (err) {
@@ -186,8 +210,9 @@ app.get('/b', async (req, res) => {
       );
       res.send(buffer);
     });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al procesar la imagen' });
+    }
+    catch (error) {
+      res.status(500).json({ error: 'Error al procesar la imagen' });
   }
 });
 
