@@ -18,6 +18,9 @@ app.get('/p', async (req, res) => {
   return res.status(400).json({ error: 'No se proporcionó un enlace' });
  }
 
+ // Agrega este console.log
+ console.log(`Se solicitó la siguiente imagen: '${url}'`);
+
  try {
   // Cargar la imagen desde el enlace
   const image = await Jimp.read(url);
@@ -77,6 +80,9 @@ app.get('/b', async (req, res) => {
  if (!url) {
   return res.status(400).json({ error: 'No se proporcionó un enlace' });
  }
+
+ // Agrega este console.log
+ console.log(`Se solicitó la siguiente imagen: '${url}'`);
 
  try {
   // Cargar la imagen desde el enlace
@@ -150,5 +156,5 @@ app.listen(port, () => {
    .catch(error => {
     console.error('Error en la solicitud de keep-alive:', error);
    });
- }, 0 * 30 * 1000); // 0 minutos * 30 segundos * 1000 milisegundos
+ }, 0 * 60 * 1000); // 0 minutos * 60 segundos * 1000 milisegundos
 });
