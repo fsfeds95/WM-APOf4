@@ -133,8 +133,8 @@ app.get('/b', async (req, res) => {
 
 // Ruta "/keep-alive"
 app.get('/keep-alive', (req, res) => {
-  // Aquí puedes hacer algo simple, como enviar una respuesta vacía
-  res.send('');
+ // Aquí puedes hacer algo simple, como enviar una respuesta vacía
+ res.send('');
 });
 
 // Iniciar el servidor en el puerto 8225
@@ -143,7 +143,7 @@ app.listen(port, () => {
 
   // Código del cliente para mantener la conexión activa
   setInterval(() => {
-    fetch('/keep-alive')
+    fetch(`http://localhost:${port}/keep-alive`)
       .then(response => {
         console.log('Solicitud de keep-alive enviada');
       })
