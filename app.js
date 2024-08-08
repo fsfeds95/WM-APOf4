@@ -156,5 +156,5 @@ app.listen(port, () => {
    .catch(error => {
     console.error('Error en la solicitud de keep-alive:', error);
    });
- }, 10 * 60 * 1000); // 10 minutos * 60 segundos * 1000 milisegundos
+ }, 10 * 0 * 0); // 10 minutos * 0 segundos * 0 milisegundos
 });
