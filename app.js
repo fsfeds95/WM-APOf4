@@ -19,7 +19,7 @@ app.get('/p', async (req, res) => {
  }
 
  // Agrega este console.log
- console.log(`Se solicitó la siguiente imagen: '${url}'`);
+ console.log(`Se solicitó la siguiente imagen: '${url}' en la ruta '/p'`);
 
  try {
   // Cargar la imagen desde el enlace
@@ -82,7 +82,7 @@ app.get('/b', async (req, res) => {
  }
 
  // Agrega este console.log
- console.log(`Se solicitó la siguiente imagen: '${url}'`);
+ console.log(`Se solicitó la siguiente imagen: '${url}' en la ruta '/b'`);
 
  try {
   // Cargar la imagen desde el enlace
@@ -156,5 +156,5 @@ app.listen(port, () => {
    .catch(error => {
     console.error('Error en la solicitud de keep-alive:', error);
    });
- }, 30 * 60 * 1000); // 30 minutos * 60 segundos * 1000 milisegundos
+ }, 5 * 60 * 1000); // 5 minutos * 60 segundos * 1000 milisegundos
 });
