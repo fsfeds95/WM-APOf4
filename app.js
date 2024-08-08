@@ -37,8 +37,8 @@ app.get('/p', async (req, res) => {
   watermark2.resize(720, 1080);
 
   // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
-  watermark1.opacity(0.10);
-  watermark2.opacity(0.35);
+  watermark1.opacity(0.05);
+  watermark2.opacity(0.225);
 
   // Combinar las marcas de agua en una sola imagen
   watermark1.composite(watermark2, 0, 0, {
@@ -100,8 +100,8 @@ app.get('/b', async (req, res) => {
   watermark2.resize(1280, 720);
 
   // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
-  watermark1.opacity(0.10);
-  watermark2.opacity(0.35);
+  watermark1.opacity(0.05);
+  watermark2.opacity(0.225);
 
   // Combinar las marcas de agua en una sola imagen
   watermark1.composite(watermark2, 0, 0, {
@@ -151,10 +151,10 @@ app.listen(port, () => {
  setInterval(() => {
   fetch(`http://localhost:${port}/keep-alive`)
    .then(response => {
-    console.log('Solicitud de keep-alive enviada');
+    console.log('Sigo vivo 🎉');
    })
    .catch(error => {
     console.error('Error en la solicitud de keep-alive:', error);
    });
- }, 10 * 0 * 0); // 10 minutos * 0 segundos * 0 milisegundos
+ }, 30 * 60 * 1000); // 30 minutos * 60 segundos * 1000 milisegundos
 });
