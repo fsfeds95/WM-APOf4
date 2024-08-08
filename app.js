@@ -8,34 +8,17 @@ const port = 8225;
 
 // Middleware para procesar datos JSON
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Función para establecer la cookie de la imagen
-function setImageCookie(imageUrl, sent) {
-  var expires = "";
-  var days = 7; // La cookie expira en 7 días
-  var date = new Date();
-  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-  expires = "; expires=" + date.toUTCString();
-  document.cookie = "image_" + imageUrl + "=" + sent + expires + "; path=/";
+function setImageCookie(req, res, imageUrl, sent) {
+  res.cookie(`image_${imageUrl}`, sent, { expires: new Date(Date.now() + (7 * 24 * 60 * 60 * 1000)), path: '/' });
 }
 
 // Función para obtener el estado de la cookie de la imagen
-function getImageCookie(imageUrl) {
-  var name = "image_" + imageUrl + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return ""; // Si no se encuentra la cookie, devuelve una cadena vacía
+function getImageCookie(req, imageUrl) {
+  return req.cookies[`image_${imageUrl}`];
 }
-
 
 // Ruta "/p"
 app.get('/p', async (req, res) => {
@@ -48,7 +31,7 @@ app.get('/p', async (req, res) => {
 
   try {
     // Verificar si la imagen ya fue enviada
-    var imageSent = getImageCookie(url);
+    var imageSent = getImageCookie(req, url);
     if (imageSent === "true") {
       // La imagen ya fue enviada, no es necesario enviarla de nuevo
       console.log("La imagen ya fue enviada anteriormente");
@@ -91,7 +74,7 @@ app.get('/p', async (req, res) => {
     image.quality(100).scale(1.5).write('poster.jpeg');
 
     // Establecer la cookie de la imagen como "enviada"
-    setImageCookie(url, "true");
+    setImageCookie(req, res, url, "true");
 
     // Enviar la imagen como respuesta
     image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
@@ -104,6 +87,7 @@ app.get('/p', async (req, res) => {
       res.send(buffer);
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Error al procesar la imagen' });
   }
 });
