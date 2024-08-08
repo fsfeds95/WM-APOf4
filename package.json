@@ -4,7 +4,7 @@
   "description": "An application in Express, simple to mark images with water using jimp, for @AstroPeliculasOf",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app_v3.js"
   },
   "dependencies": {
     "express": "^4.19.2",
