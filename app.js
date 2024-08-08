@@ -37,7 +37,7 @@ app.get('/p', async (req, res) => {
   watermark2.resize(720, 1080);
 
   // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
-  watermark1.opacity(0.20);
+  watermark1.opacity(0.10);
   watermark2.opacity(0.35);
 
   // Combinar las marcas de agua en una sola imagen
@@ -100,7 +100,7 @@ app.get('/b', async (req, res) => {
   watermark2.resize(1280, 720);
 
   // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
-  watermark1.opacity(0.20);
+  watermark1.opacity(0.10);
   watermark2.opacity(0.35);
 
   // Combinar las marcas de agua en una sola imagen
@@ -156,5 +156,5 @@ app.listen(port, () => {
    .catch(error => {
     console.error('Error en la solicitud de keep-alive:', error);
    });
- }, 0 * 60 * 1000); // 0 minutos * 60 segundos * 1000 milisegundos
+ }, 10 * 60 * 1000); // 10 minutos * 60 segundos * 1000 milisegundos
 });
