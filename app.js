@@ -9,6 +9,8 @@ const port = 8225;
 // Middleware para procesar datos JSON
 app.use(express.json());
 
+//=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=\\
+
 // Ruta "/p"
 app.get('/p', async (req, res) => {
  const url = req.query.url;
@@ -71,6 +73,8 @@ app.get('/p', async (req, res) => {
   res.status(500).json({ error: 'Error al procesar la imagen' });
  }
 });
+
+//=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=\\
 
 // Ruta "/b"
 app.get('/b', async (req, res) => {
@@ -137,6 +141,89 @@ app.get('/b', async (req, res) => {
  }
 });
 
+// Ruta "/bSeries"
+app.get('/bSeries', async (req, res) => {
+ const backdrop = req.query.backdrop;
+ const poster = req.query.poster;
+
+ // Verificar si se suministraron los enlaces
+ if (!backdrop || !poster) {
+  return res.status(400).json({ error: 'No se proporcionaron los enlaces de las imágenes' });
+ }
+
+ // Agrega este console.log
+ console.log(`Se solicitaron las siguientes imágenes: Backdrop: '${backdrop}' y Poster: '${poster}' en la ruta '/bSeries'`);
+
+ try {
+  // Cargar las imágenes desde los enlaces
+  const background = await Jimp.read(backdrop);
+  const foreground = await Jimp.read(poster);
+
+  // Redimensionar la imagen de fondo a 1280x720 utilizando RESIZE_MAGPHASE
+  background.resize(1280, 720, Jimp.RESIZE_MAGPHASE);
+
+  // Redimensionar la imagen de primer plano (póster) a 480x720 utilizando RESIZE_MAGPHASE
+  foreground.resize(480, 720, Jimp.RESIZE_MAGPHASE);
+
+  // Centrar verticalmente la imagen de póster en el fondo
+  const yPos = (720 - 720) / 2;
+
+  // Dejar un espacio de 60 píxeles desde el borde izquierdo
+  const xPos = 60;
+
+  // Combinar las imágenes
+  background.composite(foreground, xPos, yPos, {
+   mode: Jimp.BLEND_SOURCE_OVER,
+   opacitySource: 1.0,
+   opacityDest: 1.0
+  });
+
+  // Cargar las marcas de agua
+  const watermark1 = await Jimp.read('Wtxt-Backdrop.png');
+  const watermark2 = await Jimp.read('Wlogo-Backdrop.png');
+
+  // Escala la marca de agua a 1280px de ancho por 720px de alto
+  watermark1.resize(1280, 720);
+  watermark2.resize(1280, 720);
+
+  // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
+  watermark1.opacity(0.075);
+  watermark2.opacity(0.40);
+
+  // Combinar las marcas de agua en una sola imagen
+  watermark1.composite(watermark2, 0, 0, {
+   mode: Jimp.BLEND_SOURCE_OVER,
+   opacitySource: 1.0,
+   opacityDest: 1.0
+  });
+
+  // Aplicar la marca de agua a la imagen final
+  background.composite(watermark1, 0, 0, {
+   mode: Jimp.BLEND_SOURCE_OVER,
+   opacitySource: 1.0,
+   opacityDest: 1.0
+  });
+
+  // Guardar la imagen combinada en formato WebP con calidad al 100%
+  background.quality(100).write('bSeries.webp');
+
+  // Enviar la imagen como respuesta
+  background.getBuffer(Jimp.MIME_WEBP, (err, buffer) => {
+   if (err) {
+    return res.status(500).json({ error: 'Error al generar la imagen' });
+   }
+   res.header(
+    'Content-Type', 'image/webp'
+   );
+   res.send(buffer);
+  });
+ } catch (error) {
+  res.status(500).json({ error: 'Error al procesar las imágenes' });
+ }
+});
+
+//=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=\\
+
 // Ruta "/keep-alive"
 app.get('/keep-alive', (req, res) => {
  // Aquí puedes hacer algo simple, como enviar una respuesta vacía
@@ -156,5 +243,5 @@ app.listen(port, () => {
    .catch(error => {
     console.error('Error en la solicitud de keep-alive:', error);
    });
- }, 5 * 60 * 1000); // 5 minutos * 60 segundos * 1000 milisegundos
+ }, 5 * 60 * 1000); // 30 minutos * 60 segundos * 1000 milisegundos
 });
