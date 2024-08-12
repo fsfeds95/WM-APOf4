@@ -61,15 +61,17 @@ app.get('/p', async (req, res) => {
   const fileName = `poster_${randomNumber}.webp`;
 
   // Guardar la imagen en formato WEBP con calidad al 100%
-  image.quality(100).scale(1.5).write(fileName);
+  image.quality(100).scale(1).write(fileName);
 
   // Enviar la imagen como respuesta
-  res.setHeader('Content-Type', 'image/webp');
-  res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-  image.getBuffer(jimp.MIME_WEBP, (err, buffer) => {
+  image.getBuffer(jimp.MIME_JPEG, (err, buffer) => {
    if (err) {
     return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
    }
+   res.header(
+    'Content-Type', 'image/webp',
+    'Content-Disposition', `attachment; filename="${fileName}"`
+   );
    res.send(buffer);
   });
  } catch (error) {
@@ -133,12 +135,14 @@ app.get('/b', async (req, res) => {
   image.quality(100).scale(1).write(fileName);
 
   // Enviar la imagen como respuesta
-  res.setHeader('Content-Type', 'image/webp');
-  res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-  image.getBuffer(jimp.MIME_WEBP, (err, buffer) => {
+  image.getBuffer(jimp.MIME_JPEG, (err, buffer) => {
    if (err) {
     return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
    }
+   res.header(
+    'Content-Type', 'image/webp',
+    'Content-Disposition', `attachment; filename="${fileName}"`
+   );
    res.send(buffer);
   });
  } catch (error) {
