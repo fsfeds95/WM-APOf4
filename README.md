@@ -1,8 +1,3 @@
-# WM-APOf4
-### Siguiente1
-## sigo2
-#### siempre3
-
-<p align="center">
-  <img alt="GitHub followers" src="https://img.shields.io/github/followers/fsfeds95">
-</p>
+<img alt="GitHub followers" src="https://img.shields.io/github/followers/fsfeds95">
+<img alt="GitHub forks" src="https://img.shields.io/github/forks/fsfeds95/WaterMark_AstroPeliculas_final">
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/fsfeds95/WaterMark_AstroPeliculas_final">
