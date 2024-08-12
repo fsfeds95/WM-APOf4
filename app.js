@@ -70,8 +70,9 @@ app.get('/p', async (req, res) => {
    res.send(buffer);
   });
  } catch (error) {
-  res.status(500).json({ error: 'Error al procesar la imagen' });
- }
+   console.error('Error al procesar las imágenes:', error);
+   res.status(500).json({ error: 'Error al generar la imagen' });
+  }
 });
 
 //=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=\\
@@ -137,8 +138,9 @@ app.get('/b', async (req, res) => {
    res.send(buffer);
   });
  } catch (error) {
-  res.status(500).json({ error: 'Error al procesar la imagen' });
- }
+   console.error('Error al procesar las imágenes:', error);
+   res.status(500).json({ error: 'Error al generar la imagen' });
+  }
 });
 
 //=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=\\
@@ -220,7 +222,8 @@ app.get('/bSeries', async (req, res) => {
    res.send(buffer);
   });
  } catch (error) {
-  res.status(500).json({ error: 'Error al procesar las imágenes' });
+  console.error('Error al procesar las imágenes:', error);
+  res.status(500).json({ error: 'Error al generar la imagen' });
  }
 });
 
