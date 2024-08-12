@@ -223,7 +223,7 @@ app.get('/bSeries', async (req, res) => {
   });
  } catch (error) {
   console.error('Error al procesar las imágenes:', error);
-  res.status(500).json({ error: 'Error al generar la imagen' });
+  res.status(500).json({ error: 'Error al generar la imagen' error});
  }
 });
 
