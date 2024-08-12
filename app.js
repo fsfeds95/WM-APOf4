@@ -1,6 +1,7 @@
 // Importar las bibliotecas requeridas
 const express = require('express');
-const Jimp = require('jimp');
+const jimp = require('jimp');
+const sharp = require('sharp');
 
 // Crea una aplicación en Express
 const app = express();
@@ -25,14 +26,14 @@ app.get('/p', async (req, res) => {
 
  try {
   // Cargar la imagen desde el enlace
-  const image = await Jimp.read(url);
+  const image = await jimp.read(url);
 
   // Redimensionar la imagen a 720x1080
   image.resize(720, 1080);
 
   // Cargar las marcas de agua
-  const watermark1 = await Jimp.read('Wtxt-poster.png');
-  const watermark2 = await Jimp.read('Wlogo-poster.png');
+  const watermark1 = await jimp.read('Wtxt-poster.png');
+  const watermark2 = await jimp.read('Wlogo-poster.png');
 
   // Escala la marca de agua a 1280px de ancho por 720px de alto
   watermark1.resize(720, 1080);
@@ -44,14 +45,14 @@ app.get('/p', async (req, res) => {
 
   // Combinar las marcas de agua en una sola imagen
   watermark1.composite(watermark2, 0, 0, {
-   mode: Jimp.BLEND_SOURCE_OVER,
+   mode: jimp.BLEND_SOURCE_OVER,
    opacitySource: 1.0,
    opacityDest: 1.0
   });
 
   // Aplicar la marca de agua a la imagen
   image.composite(watermark1, 0, 0, {
-   mode: Jimp.BLEND_SOURCE_OVER,
+   mode: jimp.BLEND_SOURCE_OVER,
    opacitySource: 1.0,
    opacityDest: 1.0
   });
@@ -60,7 +61,7 @@ app.get('/p', async (req, res) => {
   image.quality(100).scale(1.5).write('p.bin');
 
   // Enviar la imagen como respuesta
-  image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
+  image.getBuffer(jimp.MIME_JPEG, (err, buffer) => {
    if (err) {
     return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
    }
@@ -91,14 +92,14 @@ app.get('/b', async (req, res) => {
 
  try {
   // Cargar la imagen desde el enlace
-  const image = await Jimp.read(url);
+  const image = await jimp.read(url);
 
   // Redimensionar la imagen a 1280x720
   image.resize(1280, 720);
 
   // Cargar las marcas de agua
-  const watermark1 = await Jimp.read('Wtxt-Backdrop.png');
-  const watermark2 = await Jimp.read('Wlogo-Backdrop.png');
+  const watermark1 = await jimp.read('Wtxt-Backdrop.png');
+  const watermark2 = await jimp.read('Wlogo-Backdrop.png');
 
   // Escala la marca de agua a 1280px de ancho por 720px de alto
   watermark1.resize(1280, 720);
@@ -110,14 +111,14 @@ app.get('/b', async (req, res) => {
 
   // Combinar las marcas de agua en una sola imagen
   watermark1.composite(watermark2, 0, 0, {
-   mode: Jimp.BLEND_SOURCE_OVER,
+   mode: jimp.BLEND_SOURCE_OVER,
    opacitySource: 1.0,
    opacityDest: 1.0
   });
 
   // Aplicar la marca de agua a la imagen
   image.composite(watermark1, 0, 0, {
-   mode: Jimp.BLEND_SOURCE_OVER,
+   mode: jimp.BLEND_SOURCE_OVER,
    opacitySource: 1.0,
    opacityDest: 1.0
   });
@@ -128,7 +129,7 @@ app.get('/b', async (req, res) => {
   image.quality(100).scale(1).write('b.bin');
 
   // Enviar la imagen como respuesta
-  image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
+  image.getBuffer(jimp.MIME_JPEG, (err, buffer) => {
    if (err) {
     return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
    }
@@ -150,51 +151,34 @@ app.get('/bSeries', async (req, res) => {
  const b = req.query.b;
  const p = req.query.p;
 
- // Verificar si se suministraron los enlaces
  if (!b || !p) {
   return res.status(400).json({ error: 'No se proporcionaron los enlaces de las imágenes' });
  }
 
- // Agrega este console.log
  console.log(`Se solicitaron las siguientes imágenes: '${b}' y '${p}' en la ruta '/bSeries'`);
 
  try {
-  // Cargar las imágenes desde los enlaces
-  const background = await Jimp.read(b);
-  const foreground = await Jimp.read(p);
-
-  // Redimensionar la imagen de fondo a 1280x720 utilizando RESIZE_MAGPHASE
-  background.resize(1280, 720, Jimp.RESIZE_MAGPHASE);
-
-  // Redimensionar la imagen de primer plano (póster) a 480x720 utilizando RESIZE_MAGPHASE
-  foreground.resize(480, 720, Jimp.RESIZE_MAGPHASE);
-
-  // Centrar verticalmente la imagen de póster en el fondo
-  const yPos = (720 - 720) / 2;
-
-  // Dejar un espacio de 60 píxeles desde el borde izquierdo
-  const xPos = 60;
+  const background = await sharp(b).resize(1280, 720).toBuffer();
+  const foreground = await sharp(p).resize(480, 720).toBuffer();
 
   // Combinar las imágenes
-  background.composite(foreground, xPos, yPos, {
-   mode: Jimp.BLEND_SOURCE_OVER,
-   opacitySource: 1.0,
-   opacityDest: 1.0
-  });
+  const combinedImage = await sharp({
+    create: {
+     width: 1280,
+     height: 720,
+     channels: 4,
+     background: { r: 0, g: 0, b: 0, alpha: 0 }
+    }
+   })
+   .composite([
+    { input: background, gravity: 'north-west', left: 60, top: 0 },
+    { input: foreground, gravity: 'center' }
+    ])
+   .webp({ quality: 100 })
+   .toBuffer();
 
-  // Guardar la imagen combinada en formato WebP con calidad al 100%
-  background.quality(100).write('bSeries.webp');
-
-  // Enviar la imagen como respuesta
-  background.getBuffer(Jimp.MIME_WEBP, (err, buffer) => {
-   if (err) {
-    return res.status(500).json({ error: 'Error al generar la imagen' });
-   }
-   res.header(
-    'Content-Type', 'image/webp'
-   );
-   res.send(buffer);
-  });
+  res.header('Content-Type', 'image/webp');
+  res.send(combinedImage);
  } catch (error) {
   res.status(500).json({ error: 'Error al procesar las imágenes' });
  }
