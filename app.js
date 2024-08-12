@@ -13,136 +13,140 @@ app.use(express.json());
 
 // Ruta "/p?url=IMG"
 app.get('/p', async (req, res) => {
-  const url = req.query.url;
+ const url = req.query.url;
 
-  // Verificar si se suministró un enlace
-  if (!url) {
-    return res.status(400).json({ error: 'No se proporcionó un enlace' });
-  }
+ // Verificar si se suministró un enlace
+ if (!url) {
+  return res.status(400).json({ error: 'No se proporcionó un enlace' });
+ }
 
-  // Agrega este console.log
-  console.log(`Se solicitó la siguiente imagen: '${url}' en la ruta '/p'`);
+ // Agrega este console.log
+ console.log(`Se solicitó la siguiente imagen: '${url}' en la ruta '/p'`);
 
-  try {
-    // Cargar la imagen desde el enlace
-    const image = await jimp.read(url);
+ try {
+  // Cargar la imagen desde el enlace
+  const image = await jimp.read(url);
 
-    // Redimensionar la imagen usando RESIZE_MAGPHASE
-    image.resize(720, 1080, jimp.RESIZE_MAGPHASE);
+  // Redimensionar la imagen usando RESIZE_MAGPHASE
+  image.resize(720, 1080, jimp.RESIZE_MAGPHASE);
 
-    // Cargar las marcas de agua
-    const watermark1 = await jimp.read('Wtxt-poster.png');
-    const watermark2 = await jimp.read('Wlogo-poster.png');
+  // Cargar las marcas de agua
+  const watermark1 = await jimp.read('Wtxt-poster.png');
+  const watermark2 = await jimp.read('Wlogo-poster.png');
 
-    // Escala la marca de agua a 1280px de ancho por 720px de alto
-    watermark1.resize(720, 1080);
-    watermark2.resize(720, 1080);
+  // Escala la marca de agua a 1280px de ancho por 720px de alto
+  watermark1.resize(720, 1080);
+  watermark2.resize(720, 1080);
 
-    // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
-    watermark1.opacity(0.08);
-    watermark2.opacity(0.40);
+  // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
+  watermark1.opacity(0.08);
+  watermark2.opacity(0.40);
 
-    // Combinar las marcas de agua en una sola imagen
-    watermark1.composite(watermark2, 0, 0, {
-      mode: jimp.BLEND_SOURCE_OVER,
-      opacitySource: 1.0,
-      opacityDest: 1.0
-    });
+  // Combinar las marcas de agua en una sola imagen
+  watermark1.composite(watermark2, 0, 0, {
+   mode: jimp.BLEND_SOURCE_OVER,
+   opacitySource: 1.0,
+   opacityDest: 1.0
+  });
 
-    // Aplicar la marca de agua a la imagen
-    image.composite(watermark1, 0, 0, {
-      mode: jimp.BLEND_SOURCE_OVER,
-      opacitySource: 1.0,
-      opacityDest: 1.0
-    });
+  // Aplicar la marca de agua a la imagen
+  image.composite(watermark1, 0, 0, {
+   mode: jimp.BLEND_SOURCE_OVER,
+   opacitySource: 1.0,
+   opacityDest: 1.0
+  });
 
-    var nameB = "poster.webp";
+  // Generar un número aleatorio de 4 dígitos entre 0000 y 9999
+  const randomNumber = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  const fileName = `poster_${randomNumber}.webp`;
 
-    // Guardar la imagen en formato WEBP con calidad al 100%
-    image.quality(100).scale(1.5).write('poster.webp');
+  // Guardar la imagen en formato WEBP con calidad al 100%
+  image.quality(100).scale(1.5).write(fileName);
 
-    // Enviar la imagen como respuesta
-    image.getBuffer(jimp.MIME_JPEG, (err, buffer) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
-      }
-      res.header(
-        'Content-Type', 'image/webp'
-      );
-      res.send(buffer);
-    });
-  } catch (error) {
-    console.error('Error al procesar las imágenes:', error);
-    res.status(500).json({ error: 'Error al generar la imagen CATCH' });
-  }
+  // Enviar la imagen como respuesta
+  image.getBuffer(jimp.MIME_JPEG, (err, buffer) => {
+   if (err) {
+    return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
+   }
+   res.header(
+    'Content-Type', 'image/webp'
+   );
+   res.send(buffer);
+  });
+ } catch (error) {
+  console.error('Error al procesar las imágenes:', error);
+  res.status(500).json({ error: 'Error al generar la imagen CATCH' });
+ }
 });
 
 //=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=\\
 
 // Ruta "/b?url=IMG"
 app.get('/b', async (req, res) => {
-  const url = req.query.url;
+ const url = req.query.url;
 
-  // Verificar si se suministró un enlace
-  if (!url) {
-    return res.status(400).json({ error: 'No se proporcionó un enlace' });
-  }
+ // Verificar si se suministró un enlace
+ if (!url) {
+  return res.status(400).json({ error: 'No se proporcionó un enlace' });
+ }
 
-  // Agrega este console.log
-  console.log(`Se solicitó la siguiente imagen: '${url}' en la ruta '/b'`);
+ // Agrega este console.log
+ console.log(`Se solicitó la siguiente imagen: '${url}' en la ruta '/b'`);
 
-  try {
-    // Cargar la imagen desde el enlace
-    const image = await jimp.read(url);
+ try {
+  // Cargar la imagen desde el enlace
+  const image = await jimp.read(url);
 
-    // Redimensionar la imagen usando RESIZE_MAGPHASE
-    image.resize(1280, 720, jimp.RESIZE_MAGPHASE);
+  // Redimensionar la imagen usando RESIZE_MAGPHASE
+  image.resize(1280, 720, jimp.RESIZE_MAGPHASE);
 
-    // Cargar las marcas de agua
-    const watermark1 = await jimp.read('Wtxt-Backdrop.png');
-    const watermark2 = await jimp.read('Wlogo-Backdrop.png');
+  // Cargar las marcas de agua
+  const watermark1 = await jimp.read('Wtxt-Backdrop.png');
+  const watermark2 = await jimp.read('Wlogo-Backdrop.png');
 
-    // Escala la marca de agua a 1280px de ancho por 720px de alto
-    watermark1.resize(1280, 720);
-    watermark2.resize(1280, 720);
+  // Escala la marca de agua a 1280px de ancho por 720px de alto
+  watermark1.resize(1280, 720);
+  watermark2.resize(1280, 720);
 
-    // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
-    watermark1.opacity(0.08);
-    watermark2.opacity(0.40);
+  // Establece la opacidad de la watermark1 a 0.375 y watermark2 a 0.75
+  watermark1.opacity(0.08);
+  watermark2.opacity(0.40);
 
-    // Combinar las marcas de agua en una sola imagen
-    watermark1.composite(watermark2, 0, 0, {
-      mode: jimp.BLEND_SOURCE_OVER,
-      opacitySource: 1.0,
-      opacityDest: 1.0
-    });
+  // Combinar las marcas de agua en una sola imagen
+  watermark1.composite(watermark2, 0, 0, {
+   mode: jimp.BLEND_SOURCE_OVER,
+   opacitySource: 1.0,
+   opacityDest: 1.0
+  });
 
-    // Aplicar la marca de agua a la imagen
-    image.composite(watermark1, 0, 0, {
-      mode: jimp.BLEND_SOURCE_OVER,
-      opacitySource: 1.0,
-      opacityDest: 1.0
-    });
+  // Aplicar la marca de agua a la imagen
+  image.composite(watermark1, 0, 0, {
+   mode: jimp.BLEND_SOURCE_OVER,
+   opacitySource: 1.0,
+   opacityDest: 1.0
+  });
 
-    var nameB = "backdrop.webp";
+  // Generar un número aleatorio de 4 dígitos entre 0000 y 9999
+  const randomNumber = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  const fileName = `backdrop_${randomNumber}.webp`;
 
-    // Guardar la imagen en formato WEBP con calidad al 100%
-    image.quality(100).scale(1).write('backdrop.webp');
+  // Guardar la imagen en formato WEBP con calidad al 100%
+  image.quality(100).scale(1).write(fileName);
 
-    // Enviar la imagen como respuesta
-    image.getBuffer(jimp.MIME_JPEG, (err, buffer) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
-      }
-      res.header(
-        'Content-Type', 'image/webp'
-      );
-      res.send(buffer);
-    });
-  } catch (error) {
-    console.error('Error al procesar las imágenes:', error);
-    res.status(500).json({ error: 'Error al generar la imagen CATCH' });
-  }
+  // Enviar la imagen como respuesta
+  image.getBuffer(jimp.MIME_JPEG, (err, buffer) => {
+   if (err) {
+    return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
+   }
+   res.header(
+    'Content-Type', 'image/webp'
+   );
+   res.send(buffer);
+  });
+ } catch (error) {
+  console.error('Error al procesar las imágenes:', error);
+  res.status(500).json({ error: 'Error al generar la imagen CATCH' });
+ }
 });
 
 //=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=\\
