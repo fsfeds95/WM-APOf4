@@ -149,22 +149,24 @@ app.get('/b', async (req, res) => {
 
 // Ruta "/keep-alive"
 app.get('/keep-alive', (req, res) => {
-  // Aquí puedes hacer algo simple, como enviar una respuesta vacía
-  res.send('');
+ // Aquí puedes hacer algo simple, como enviar una respuesta vacía
+ res.send('');
 });
 
 // Iniciar el servidor en el puerto 8225
 app.listen(port, () => {
-  console.log(`Servidor iniciado en http://localhost:${port}`);
+ console.log(`Servidor iniciado en http://localhost:${port}`);
 
-  // Código del cliente para mantener la conexión activa
-  setInterval(() => {
-    fetch(`http://localhost:${port}/keep-alive`)
-      .then(response => {
-        console.log('Sigo vivo 🎉');
-      })
-      .catch(error => {
-        console.error('Error en la solicitud de keep-alive:', error);
-      });
-  }, 5 * 60 * 1000); // 30 minutos * 60 segundos * 1000 milisegundos
+ // Código del cliente para mantener la conexión activa
+ setInterval(() => {
+  fetch(`http://localhost:${port}/keep-alive`)
+   .then(response => {
+    const currentDate = new Date();
+    const formattedTime = `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()} - ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
+    console.log(`Sigo vivo 🎉 (${formattedTime})`);
+   })
+   .catch(error => {
+    console.error('Error en la solicitud de keep-alive:', error);
+   });
+ }, 5 * 60 * 1000); // 30 minutos * 60 segundos * 1000 milisegundos
 });
