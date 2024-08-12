@@ -130,7 +130,7 @@ app.get('/b', async (req, res) => {
   // Enviar la imagen como respuesta
   image.getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
    if (err) {
-    return res.status(500).json({ error: 'Error al generar la imagen' });
+    return res.status(500).json({ error: 'Error al generar la imagen "BUFFER"' });
    }
    res.header(
     'Content-Type', 'image/jpeg'
@@ -139,7 +139,7 @@ app.get('/b', async (req, res) => {
   });
  } catch (error) {
    console.error('Error al procesar las imágenes:', error);
-   res.status(500).json({ error: 'Error al generar la imagen' });
+   res.status(500).json({ error: 'Error al generar la imagen "CATCH"' });
   }
 });
 
