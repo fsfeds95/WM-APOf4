@@ -69,8 +69,7 @@ app.get('/p', async (req, res) => {
     return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
    }
    res.header(
-    'Content-Type', 'image/webp',
-    'Content-Disposition', `attachment; filename="${fileName}"`
+    'Content-Type', 'image/webp'
    );
    res.send(buffer);
   });
@@ -140,8 +139,7 @@ app.get('/b', async (req, res) => {
     return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
    }
    res.header(
-    'Content-Type', 'image/webp',
-    'Content-Disposition', `attachment; filename="${fileName}"`
+    'Content-Type', 'image/webp'
    );
    res.send(buffer);
   });
