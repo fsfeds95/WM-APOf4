@@ -64,13 +64,12 @@ app.get('/p', async (req, res) => {
   image.quality(100).scale(1.5).write(fileName);
 
   // Enviar la imagen como respuesta
-  image.getBuffer(jimp.MIME_JPEG, (err, buffer) => {
+  res.setHeader('Content-Type', 'image/webp');
+  res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+  image.getBuffer(jimp.MIME_WEBP, (err, buffer) => {
    if (err) {
     return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
    }
-   res.header(
-    'Content-Type', 'image/webp'
-   );
    res.send(buffer);
   });
  } catch (error) {
@@ -134,13 +133,12 @@ app.get('/b', async (req, res) => {
   image.quality(100).scale(1).write(fileName);
 
   // Enviar la imagen como respuesta
-  image.getBuffer(jimp.MIME_JPEG, (err, buffer) => {
+  res.setHeader('Content-Type', 'image/webp');
+  res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+  image.getBuffer(jimp.MIME_WEBP, (err, buffer) => {
    if (err) {
     return res.status(500).json({ error: 'Error al generar la imagen BUFFER' });
    }
-   res.header(
-    'Content-Type', 'image/webp'
-   );
    res.send(buffer);
   });
  } catch (error) {
