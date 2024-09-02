@@ -101,8 +101,8 @@ app.get('/b', async (req, res) => {
   image.resize(1280, 720, jimp.RESIZE_MAGPHASE);
 
   // Cargar las marcas de agua
-  const watermark1 = await jimp.read('Wtxt-Backdrop.png');
-  const watermark2 = await jimp.read('Wlogo-Backdrop.png');
+  const watermark1 = await jimp.read('Wtxt-Backdrop-1.png');
+  const watermark2 = await jimp.read('Wlogo-Backdrop-1.png');
 
   // Escala la marca de agua a 1280px de ancho por 720px de alto
   watermark1.resize(1280, 720);
