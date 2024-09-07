@@ -46,10 +46,6 @@ app.get('/p', async (req, res) => {
   watermark1.opacity(0.16);
   watermark2.opacity(0.40);
 
-  // Aplicar un desenfoque del 12% a watermark1
-  watermark1.blur(0.12);
-  watermark2.blur(0);
-
   // Combinar las marcas de agua en una sola imagen
   watermark1.composite(watermark2, 0, 0, {
    mode: jimp.BLEND_SOURCE_OVER,
