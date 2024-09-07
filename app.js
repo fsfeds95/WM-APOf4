@@ -1,6 +1,7 @@
 const express = require('express');
 const jimp = require('jimp-compact');
 const sharp = require('sharp'); // Importa sharp
+const axios = require('axios'); // Importa axios
 
 const app = express();
 const port = 8225;
@@ -18,7 +19,8 @@ app.get('/p', async (req, res) => {
  console.log(`Se solicitó la siguiente imagen: '${url}' en la ruta '/p'`);
 
  try {
-  const imageBuffer = await sharp(url).resize(720, 1080).toBuffer(); // Comprime la imagen
+  const response = await axios.get(url, { responseType: 'arraybuffer' }); // Descarga la imagen
+  const imageBuffer = await sharp(response.data).resize(720, 1080).toBuffer(); // Comprime la imagen
   const image = await jimp.read(imageBuffer);
 
   // Limitar tamaño de archivo
