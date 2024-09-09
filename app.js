@@ -168,27 +168,23 @@ app.get('/b', async (req, res) => {
 
 // Ruta para convertir la imagen
 app.get('/convertir-imagen', (req, res) => {
- const imageUrl = req.query.url; // Obtiene la URL de la imagen a convertir
- const randomNum = Math.floor(Math.random() * 10000).toString().padStart(4, '0'); // Genera un número aleatorio de 4 dígitos
- const outputFileName = `imagen_${randomNum}.webp`; // Nombre del archivo de salida en formato webp
+  const imageUrl = req.query.url;
+  const randomNum = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  const outputFileName = `imagen_${randomNum}.webp`;
 
- // Petición para obtener la imagen original
- axios({
-  url: imageUrl,
-  responseType: 'arraybuffer'
- }).then(response => {
-  // Conversión de la imagen a formato webp
-  sharp(response.data)
-   .toFormat('webp')
-   .toBuffer()
-   .then(data => {
-    // Configuración de la respuesta para mostrar la imagen convertida en el navegador
-    res.set('Content-Type', 'image/webp');
-    res.set('Content-Disposition', `attachment; filename="${outputFileName}"`); // Nombre del archivo al guardarlo
-    res.send(data); // Envía la imagen convertida como respuesta
-   })
-   .catch(err => res.send('¡Ups! Algo salió mal al convertir la imagen: ' + err)); // Manejo de errores en la conversión
- }).catch(err => res.send('¡Error al obtener la imagen: ' + err)); // Manejo de errores en la obtención de la imagen
+  axios({
+    url: imageUrl,
+    responseType: 'arraybuffer'
+  }).then(response => {
+    sharp(response.data)
+      .toFormat('webp')
+      .toBuffer()
+      .then(data => {
+        res.set('Content-Type', 'image/webp');
+        res.send(data); // Ahora la imagen se mostrará en el navegador en lugar de descargarse
+      })
+      .catch(err => res.send('¡Ups! Algo salió mal al convertir la imagen: ' + err));
+  }).catch(err => res.send('¡Error al obtener la imagen: ' + err));
 });
 
 //=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=\\
