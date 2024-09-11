@@ -166,6 +166,7 @@ app.get('/b', async (req, res) => {
 
 //=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=\\
 
+// Ruta "/convertir-imagen?url=UrlImage" para convertir la imagen
 app.get('/convertir-imagen', (req, res) => {
  const imageUrl = req.query.url;
  const randomNum = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
@@ -189,10 +190,22 @@ app.get('/convertir-imagen', (req, res) => {
 //=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=\\
 
 // Ruta para eliminar imágenes de la caché
-app.delete('/clear-cache', (req, res) => {
+app.delete('/limpiarCache', (req, res) => {
  imageCache = {};
  res.send('Caché de imágenes eliminada');
 });
+
+// Ruta para obtener la lista de imágenes en la caché con fecha de introducción
+app.get('/imageCache', (req, res) => {
+ const imageKeys = Object.keys(imageCache);
+ const imagesWithDate = imageKeys.map(key => ({
+  name: key,
+  date: imageCache[key].dateAdded
+ }));
+
+ res.json({ images: imagesWithDate });
+});
+
 
 //=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=•=\\
 
